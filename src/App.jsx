@@ -23,22 +23,42 @@ export default function App() {
   const validateForm = () => {
     setIsSubmitted(false)
     const newErrors = {}
+    
     if (name.trim().length < 3) {
       newErrors.name = 'Name must be at least 3 characters long'
     }
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       newErrors.email = 'Enter a valid email address'
     }
-    if (password.length < 6 || !/[A-Z]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-      newErrors.password = 'Password must contain at least 6 characters, one uppercase letter, and one special character'
+    
+    // Password validation
+    if (password.length === 0) {
+      newErrors.password = 'Password is required'
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long'
+    } else if (!/[A-Z]/.test(password)) {
+      newErrors.password = 'Password must contain at least one uppercase letter'
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      newErrors.password = 'Password must contain at least one special character'
     }
-    if (password !== confirmPassword) {
+    
+    // Confirm Password validation
+    if (confirmPassword.length === 0) {
+      newErrors.confirmPassword = 'Please confirm your password'
+    } else if (password !== confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match'
     }
+    
     setErrors(newErrors)
     if (Object.keys(newErrors).length === 0) {
       setIsSubmitted(true)
+      // Clear form fields after successful submission
+      setName('')
+      setEmail('')
+      setPassword('')
+      setConfirmPassword('')
     }
   }
 
